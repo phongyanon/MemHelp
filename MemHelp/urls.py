@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^random_num/$', views.random_num, name='random_num'),
     url(r'^show_major/$', views.show_major, name='show_major'),
     url(r'^add_word/$', views.add_word, name='add_word'),
+    url(r'^add_word_csv/$', views.add_word_csv, name='add_word_csv'),
 ]

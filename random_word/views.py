@@ -9,10 +9,10 @@ from .models import WordPractice
 
 def index(request):
 	template = 'index.html'
-	return render_to_response(template)
+	return render_to_response(template, {'how_to':True})
 
 def random_word(request, num, seq=''):
-	template = "random.html"
+	template = "index.html"
 	context = {}
 	all_word = WordPractice.objects.all()
 	list_index = []
@@ -35,16 +35,29 @@ def get_major_word(start, end):
 def random_interval(request):
 	ran_num = randint(0, 9)
 	l = get_major_word(ran_num*10, ran_num*10+10)
-	return render_to_response("random.html",{'major_words': l} )
+	return render_to_response("index.html",{'major_words': l} )
 
 def random_num(request):
 	list_num = []
 	for i in range(10):
 		list_num.append(randrange(0, 101))
-	return render_to_response("random.html", {'list_num':list_num})
+	return render_to_response("index.html", {'list_num':list_num})
 
 def show_major(request):
-	return render_to_response("random.html", {'major_words': WordPractice.objects.filter(is_major= True).order_by('major_num')})
+	return render_to_response("index.html", {'major_words': WordPractice.objects.filter(is_major= True).order_by('major_num')})
 
 def add_word(request):
 	return HttpResponse("add_word")
+
+def add_word_csv(request):
+	import csv
+	with open('words.csv', 'rt') as f:
+		reader = csv.DictReader(f)
+		for row in reader:
+			new_word = WordPractice.objects.create(word=row['word'] )
+			if row['is_major']:
+				new_word.is_major = True 
+			if row['major_num'] != '':
+				new_word.major_num = int(row['major_num'])
+			new_word.save()
+	return HttpResponse("Upload database success.")
