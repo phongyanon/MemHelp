@@ -1,0 +1,1 @@
+web: gunicorn MemHelp.wsgi --log-file -
